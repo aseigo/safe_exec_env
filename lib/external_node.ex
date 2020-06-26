@@ -123,8 +123,8 @@ defmodule SafeExecEnv.ExternNode do
   end
 
   defp add_boot_file_to_args(args) when is_list(args) do
-    if File.exists?(System.cwd() <> "/bin/start_clean.boot") do
-      args ++ ' -boot ' ++ String.to_charlist(System.cwd()) ++ '/bin/start_clean'
+    if File.exists?(File.cwd() <> "/bin/start_clean.boot") do
+      args ++ ' -boot ' ++ String.to_charlist(File.cwd()) ++ '/bin/start_clean'
     else
       args
     end
