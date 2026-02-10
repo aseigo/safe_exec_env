@@ -26,7 +26,7 @@ defmodule SafeExecEnv.ExternNode do
   end
 
   defp create_node_name({:ok, host}, name), do: create_node_name(host, name)
-  defp create_node_name(host, name), do: List.to_atom(name ++ '@' ++ host)
+  defp create_node_name(host, name), do: List.to_atom(name ++ ~c"@" ++ host)
 
   defp start_node_if_mia(node, _linkTo, :pong), do: {:ok, node}
 
@@ -110,21 +110,19 @@ defmodule SafeExecEnv.ExternNode do
 
     args =
       :code.get_path()
-      |> Enum.reduce('-setcookie "' ++ cookie ++ '" -hidden -pa ', fn path, acc ->
-        acc ++ ' ' ++ path
+      |> Enum.reduce(~c'-setcookie "' ++ cookie ++ ~c'" -hidden -pa ', fn path, acc ->
+        acc ++ ~c" " ++ path
       end)
       |> add_boot_file_to_args()
 
     erl_binary = System.find_executable("erl")
 
-    "#{erl_binary} -detached -noinput -master #{node()} #{cli_node_name_switch()} #{name} -s #{
-      __MODULE__
-    } slave_start #{node()} #{waiter} #{args}"
+    "#{erl_binary} -detached -noinput -master #{node()} #{cli_node_name_switch()} #{name} -s #{__MODULE__} slave_start #{node()} #{waiter} #{args}"
   end
 
   defp add_boot_file_to_args(args) when is_list(args) do
-    if File.exists?(File.cwd() <> "/bin/start_clean.boot") do
-      args ++ ' -boot ' ++ String.to_charlist(File.cwd()) ++ '/bin/start_clean'
+    if File.exists?(File.cwd!() <> "/bin/start_clean.boot") do
+      args ++ ~c" -boot " ++ String.to_charlist(File.cwd()) ++ ~c"/bin/start_clean"
     else
       args
     end
