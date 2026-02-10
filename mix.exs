@@ -34,7 +34,7 @@ defmodule SafeExecEnv.MixProject do
       # These are the default files included in the package
       files: ["lib", "mix.exs", "README*", "LICENSE*"],
       maintainers: ["Aaron Seigo"],
-      licenses: ["Apache 2.0"],
+      licenses: ["Apache-2.0"],
       links: %{"GitHub" => "https://github.com/aseigo/safe_exec_env"}
     ]
   end
